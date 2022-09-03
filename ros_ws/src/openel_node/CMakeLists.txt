@@ -35,6 +35,7 @@ add_executable(openel_node
   ${STUBS_SOURCE_DIR}/src/M5Stack.cpp
   src/openel/hako_openEL_registryConfig.cpp
   src/openel/openEL_ActuatorHako.cpp
+  src/openel/openEL_SensorHako.cpp
   src/main.cpp
 )
 ament_target_dependencies(openel_node 

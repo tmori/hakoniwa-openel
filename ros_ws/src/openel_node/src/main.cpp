@@ -3,15 +3,17 @@
 #include <string.h>
 #include "openel_node.hpp"
 #include <Actuator.hpp>
+#include <Sensor.hpp>
 #include <openEL.hpp>
 #include "openel/openEL_ActuatorHako.hpp"
 
 using namespace std::chrono_literals;
 std::string * openel_pub_topic_name = nullptr;
-
+std::string* openel_sub_topic_name = nullptr;
 std::shared_ptr<rclcpp::Node> openel_node = nullptr;
 static Actuator* hako_motor_l;
 static Actuator* hako_motor_r;
+static Sensor* hako_sensor;
 
 static void hako_motor_init()
 {
@@ -38,6 +40,22 @@ static void hako_motor_init()
     }
     std::cout << "OpenEL Motor R init OK" << std::endl;
 }
+static void hako_sensor_init()
+{
+    HALId halid;
+    halid.deviceKindId = 0x0002;
+    halid.productId = 0x00000001;
+    halid.vendorId = 0x0000000E;
+    
+    halid.instanceId = 0x1;
+    hako_sensor = new Sensor(halid);
+    ReturnCode ret = hako_sensor->Init();
+    if (ret != HAL_OK) {
+        std::cout << "ERROR: sensor init()" << std::endl;
+        exit(1);
+    }
+    std::cout << "OpenEL Sensor init OK" << std::endl;
+}
 
 int main(int argc, char **argv) 
 {
@@ -57,6 +75,7 @@ int main(int argc, char **argv)
     }    
     const char *node_name = buffer[0];
     openel_pub_topic_name = new std::string(buffer[1]);
+    openel_sub_topic_name = new std::string(buffer[2]);
     std::cout << "START:" << node_name << std::endl;
     //ROS CODES
     rclcpp::init(argc, argv);
@@ -65,6 +84,7 @@ int main(int argc, char **argv)
     //OPENEL CODES
     {
         hako_motor_init();
+        hako_sensor_init();
     }
 
     rclcpp::WallRate rate(100ms);
@@ -84,8 +104,10 @@ int main(int argc, char **argv)
     {
         hako_motor_l->Finalize();
         hako_motor_r->Finalize();
+        hako_sensor->Finalize();
         delete hako_motor_l;
         delete hako_motor_r;
+        delete hako_sensor;
     }
 
     rclcpp::shutdown();

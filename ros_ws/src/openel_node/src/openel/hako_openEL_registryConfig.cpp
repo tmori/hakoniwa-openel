@@ -34,11 +34,11 @@
 #include "Actuator.hpp"
 #include "Sensor.hpp"
 #include "openEL_ActuatorHako.hpp"
+#include "openEL_SensorHako.hpp"
 
 const HAL_REG_T HalRegTbl[] = {
     {0x0001, 0x0000000E, 0x00000001, &HalActuatorHakoTbl, sizeof(Actuator) },
-    {0x0002, 0x0000000E, 0x00000001, NULL,  sizeof(Sensor)   },
-    {0x000D, 0x0000000E, 0x00000001, NULL,   sizeof(Sensor)   },
+    {0x0002, 0x0000000E, 0x00000001, &HalSensorHakoTbl,  sizeof(Sensor)   }
 };
 
 const int32_t hal_szRegTbl = sizeof(HalRegTbl)/sizeof(HAL_REG_T);

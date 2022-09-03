@@ -24,7 +24,7 @@ Property ActuatorHako::ActuatorHako_property;
 ReturnCode ActuatorHako::fncInit(HALComponent *pHALComponent)
 {
     if (publisher == nullptr) {
-        std::cout<< "ActuatorHako::openel_node=0x" << openel_node << std::endl;
+        std::cout<< "ActuatorHako::openel_pub_topic_name = " << *openel_pub_topic_name << std::endl;
         publisher = openel_node->create_publisher<geometry_msgs::msg::Twist>(*openel_pub_topic_name, 1);
         cmd_vel.linear.x = 0.0f;
         cmd_vel.angular.z = 0.0f;
