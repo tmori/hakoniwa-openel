@@ -9,7 +9,7 @@ main(int argc, const char* argv[])
     HALId halid;
     halid.deviceKindId = 0x0001;
     halid.productId = 0x00000001;
-    halid.vendorId = 0x0000000A;
+    halid.vendorId = 0x0000000E;
     halid.instanceId = 0x00000001;
 
     Actuator* hako_actuator = new Actuator(halid);
@@ -22,7 +22,7 @@ main(int argc, const char* argv[])
     }
 
     //publish topic
-    hako_actuator->SetValue(0, 0.1);
+    hako_actuator->SetValue(HAL_REQUEST_VELOCITY_CONTROL, 0.1);
 
     hako_actuator->Finalize();
 
