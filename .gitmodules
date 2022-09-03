@@ -1,0 +1,3 @@
+[submodule "openel-arduino"]
+	path = openel-arduino
+	url = https://github.com/openel/openel-arduino.git
