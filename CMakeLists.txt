@@ -9,6 +9,7 @@ project(hakoniwa-openel
 
 set(OPENEL_SOURCE_DIR "${PROJECT_SOURCE_DIR}/openel-arduino/src")
 set(STUBS_SOURCE_DIR "${PROJECT_SOURCE_DIR}/stubs")
+set(MAIN_SOURCE_DIR "${PROJECT_SOURCE_DIR}/src")
 
 if (DEFINED HAKO_OPTION_FILEPATH)
     include(${HAKO_OPTION_FILEPATH})
@@ -28,8 +29,8 @@ add_library(
     ${OPENEL_SOURCE_DIR}/openEL_linkedList.cpp
     ${OPENEL_SOURCE_DIR}/openEL.cpp
     ${STUBS_SOURCE_DIR}/src/M5Stack.cpp
-    openel/hako_openEL_registryConfig.cpp
-    openel/openEL_ActuatorHako.cpp
+    ${MAIN_SOURCE_DIR}/hako_openEL_registryConfig.cpp
+    ${MAIN_SOURCE_DIR}/openEL_ActuatorHako.cpp
 )
 
 target_include_directories(

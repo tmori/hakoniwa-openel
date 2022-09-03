@@ -1,6 +1,10 @@
 
 #include "openEL_ActuatorHako.hpp"
 #include <iostream>
+#include <string.h>
+
+std::shared_ptr<rclcpp::Publisher<geometry_msgs::msg::Twist>> ActuatorHako::publisher;
+geometry_msgs::msg::Twist ActuatorHako::cmd_vel;
 
 std::string ActuatorHako::strDevName = "ActuatorHako";
 
@@ -19,20 +23,21 @@ Property ActuatorHako::ActuatorHako_property;
 
 ReturnCode ActuatorHako::fncInit(HALComponent *pHALComponent)
 {
-    //TODO
+    std::cout<< "ActuatorHako::openel_node=0x" << openel_node << std::endl;
+    publisher = openel_node->create_publisher<geometry_msgs::msg::Twist>(*openel_pub_topic_name, 1);
+    cmd_vel.linear.x = 0.0f;
+    cmd_vel.angular.z = 0.0f;
     std::cout<< "ActuatorHako::fncInit()" << std::endl;
     return HAL_OK;
 }
 
 ReturnCode ActuatorHako::fncReInit(HALComponent *pHALComponent)
 {
-    //TODO
-    return HAL_OK;
+   return HAL_OK;
 }
 
 ReturnCode ActuatorHako::fncFinalize(HALComponent *pHALComponent)
 {
-    //TODO
     std::cout<< "ActuatorHako::fncFinalize()" << std::endl;
     return HAL_OK;
 }
@@ -83,7 +88,6 @@ ReturnCode ActuatorHako::fncGetTimedValLst(HALComponent *pHALComponent, float **
 ReturnCode ActuatorHako::fncSetValue(HALComponent *pHALComponent, int request, float value)
 {
     ReturnCode retCode = HAL_OK;
-    std::cout<< "ActuatorHako::fncSetValue()" << std::endl;
 
     if (pHALComponent->hALId.instanceId >= InstanceNum)
     {
@@ -97,8 +101,9 @@ ReturnCode ActuatorHako::fncSetValue(HALComponent *pHALComponent, int request, f
         //setEncoder((int32_t)value, pHALComponent->hALId.instanceId);
         break;
     case HAL_REQUEST_VELOCITY_CONTROL:
-        //TODO
-        //setSpeed((int16_t)value, pHALComponent->hALId.instanceId);
+        cmd_vel.linear.x = value;
+        publisher->publish(cmd_vel);
+        //std::cout<< "ActuatorHako::publish()" << std::endl;
         break;
     case HAL_REQUEST_TORQUE_CONTROL:
         break;

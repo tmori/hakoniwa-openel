@@ -2,6 +2,8 @@
 #define _OPENEL_ACTUATOR_HAKO_HPP_
 
 #include "Actuator.hpp"
+#include "openel_node.hpp"
+#include "geometry_msgs/msg/twist.hpp"
 
 #define MOTOR_ADDRESS    0x3A
 #define MOTOR_SPEED_L    0x00
@@ -23,6 +25,8 @@ class ActuatorHako : public Actuator
 private:
     static std::string strDevName;
     static std::vector<std::string> strFncLst;
+    static std::shared_ptr<rclcpp::Publisher<geometry_msgs::msg::Twist>> publisher;
+    static geometry_msgs::msg::Twist cmd_vel;
 
 public:
     static Property ActuatorHako_property;

@@ -17,12 +17,13 @@ endif()
 
 set(OPENEL_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../openel-arduino/src")
 set(STUBS_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../stubs")
-set(MAIN_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../src")
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 
 add_executable(openel_node 
   ${OPENEL_SOURCE_DIR}/Actuator.cpp
@@ -32,13 +33,15 @@ add_executable(openel_node
   ${OPENEL_SOURCE_DIR}/openEL_linkedList.cpp
   ${OPENEL_SOURCE_DIR}/openEL.cpp
   ${STUBS_SOURCE_DIR}/src/M5Stack.cpp
-  ${MAIN_SOURCE_DIR}/hako_openEL_registryConfig.cpp
-  ${MAIN_SOURCE_DIR}/openEL_ActuatorHako.cpp
+  src/openel/hako_openEL_registryConfig.cpp
+  src/openel/openEL_ActuatorHako.cpp
   src/main.cpp
 )
 ament_target_dependencies(openel_node 
   rclcpp 
   std_msgs 
+  geometry_msgs 
+  sensor_msgs
 )
 target_link_directories(openel_node
   PRIVATE
@@ -51,6 +54,7 @@ target_link_directories(openel_node
 
 target_include_directories(openel_node
   PRIVATE
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../../openel-arduino/src>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../../stubs/include>
 )
