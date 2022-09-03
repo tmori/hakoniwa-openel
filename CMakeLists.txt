@@ -24,6 +24,7 @@ add_executable(
     hako-openel
     ${OPENEL_SOURCE_DIR}/Actuator.cpp
     ${OPENEL_SOURCE_DIR}/Sensor.cpp
+    ${OPENEL_SOURCE_DIR}/HALComponent.cpp
     ${OPENEL_SOURCE_DIR}/EventTimer.cpp
     ${OPENEL_SOURCE_DIR}/openEL_linkedList.cpp
     ${OPENEL_SOURCE_DIR}/openEL.cpp

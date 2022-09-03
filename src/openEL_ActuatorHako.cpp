@@ -33,6 +33,7 @@ ReturnCode ActuatorHako::fncReInit(HALComponent *pHALComponent)
 ReturnCode ActuatorHako::fncFinalize(HALComponent *pHALComponent)
 {
     //TODO
+    std::cout<< "ActuatorHako::fncFinalize()" << std::endl;
     return HAL_OK;
 }
 
