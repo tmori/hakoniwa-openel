@@ -23,11 +23,13 @@ Property ActuatorHako::ActuatorHako_property;
 
 ReturnCode ActuatorHako::fncInit(HALComponent *pHALComponent)
 {
-    std::cout<< "ActuatorHako::openel_node=0x" << openel_node << std::endl;
-    publisher = openel_node->create_publisher<geometry_msgs::msg::Twist>(*openel_pub_topic_name, 1);
-    cmd_vel.linear.x = 0.0f;
-    cmd_vel.angular.z = 0.0f;
-    std::cout<< "ActuatorHako::fncInit()" << std::endl;
+    if (publisher == nullptr) {
+        std::cout<< "ActuatorHako::openel_node=0x" << openel_node << std::endl;
+        publisher = openel_node->create_publisher<geometry_msgs::msg::Twist>(*openel_pub_topic_name, 1);
+        cmd_vel.linear.x = 0.0f;
+        cmd_vel.angular.z = 0.0f;
+        std::cout<< "ActuatorHako::fncInit()" << std::endl;
+    }
     return HAL_OK;
 }
 
@@ -101,8 +103,14 @@ ReturnCode ActuatorHako::fncSetValue(HALComponent *pHALComponent, int request, f
         //setEncoder((int32_t)value, pHALComponent->hALId.instanceId);
         break;
     case HAL_REQUEST_VELOCITY_CONTROL:
-        cmd_vel.linear.x = value;
-        publisher->publish(cmd_vel);
+        if (pHALComponent->hALId.instanceId == MOTOR_LEFT) {
+            cmd_vel.linear.x = value;
+        }
+        else {
+            cmd_vel.angular.z = value;
+            //TODO publish timing .... 
+            publisher->publish(cmd_vel);
+        }
         //std::cout<< "ActuatorHako::publish()" << std::endl;
         break;
     case HAL_REQUEST_TORQUE_CONTROL:

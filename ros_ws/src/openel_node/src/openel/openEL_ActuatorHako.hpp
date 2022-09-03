@@ -45,6 +45,8 @@ public:
     static ReturnCode fncNop(HALComponent *pHALComponent, HAL_ARGUMENT_T *pCmd);
     static ReturnCode fncDeviceVendorSpec(HALComponent* pHALComponent, HAL_ARGUMENT_T *pCmd, HAL_ARGUMENT_DEVICE_T *pCmdDev);
 
+    static ReturnCode fncHakoPublish(HALComponent *pHALComponent);
+
 };
 
 extern HAL_FNCTBL_T HalActuatorHakoTbl;

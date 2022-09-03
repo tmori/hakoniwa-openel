@@ -4,35 +4,67 @@
 #include "openel_node.hpp"
 #include <Actuator.hpp>
 #include <openEL.hpp>
+#include "openel/openEL_ActuatorHako.hpp"
 
 using namespace std::chrono_literals;
 std::string * openel_pub_topic_name = nullptr;
 
 std::shared_ptr<rclcpp::Node> openel_node = nullptr;
+static Actuator* hako_motor_l;
+static Actuator* hako_motor_r;
+
+static void hako_motor_init()
+{
+    HALId halid;
+    halid.deviceKindId = 0x0001;
+    halid.productId = 0x00000001;
+    halid.vendorId = 0x0000000E;
+    
+    halid.instanceId = MOTOR_LEFT;
+    hako_motor_l = new Actuator(halid);
+    ReturnCode ret = hako_motor_l->Init();
+    if (ret != HAL_OK) {
+        std::cout << "ERROR: motor left init()" << std::endl;
+        exit(1);
+    }
+    std::cout << "OpenEL Motor L init OK" << std::endl;
+
+    halid.instanceId = MOTOR_RIGHT;
+    hako_motor_r = new Actuator(halid);
+    ret = hako_motor_r->Init();
+    if (ret != HAL_OK) {
+        std::cout << "ERROR: motor right init()" << std::endl;
+        exit(1);
+    }
+    std::cout << "OpenEL Motor R init OK" << std::endl;
+}
+
 int main(int argc, char **argv) 
 {
-    const char *node_name = "openel_node";
-    openel_pub_topic_name = new std::string("openel_pub_topic");
+    char buffer[3][4096];
+
+    if (argc > 1) {
+        sprintf(buffer[0], "%s_tb3_node", argv[1]);
+        sprintf(buffer[1], "%s_cmd_vel", argv[1]);
+        sprintf(buffer[2], "%s_scan", argv[1]);
+        printf("START: %s\n", argv[1]);
+    }
+    else {
+        sprintf(buffer[0], "tb3_node");
+        sprintf(buffer[1], "cmd_vel");
+        sprintf(buffer[2], "scan");
+        printf("START\n");
+    }    
+    const char *node_name = buffer[0];
+    openel_pub_topic_name = new std::string(buffer[1]);
     std::cout << "START:" << node_name << std::endl;
     //ROS CODES
     rclcpp::init(argc, argv);
     openel_node = rclcpp::Node::make_shared(node_name);
 
     //OPENEL CODES
-    Actuator* hako_actuator;
     {
-        HALId halid;
-        halid.deviceKindId = 0x0001;
-        halid.productId = 0x00000001;
-        halid.vendorId = 0x0000000E;
-        halid.instanceId = 0x00000001;
-        hako_actuator = new Actuator(halid);
-        ReturnCode ret = hako_actuator->Init();
-        if (ret != HAL_OK) {
-            std::cout << "ERROR: init()" << std::endl;
-            return 1;
-        }
-        std::cout << "OpenEL init OK" << std::endl;
+        hako_motor_init();
     }
 
     rclcpp::WallRate rate(100ms);
@@ -40,7 +72,8 @@ int main(int argc, char **argv)
         //OPENEL CODE
         {
             //publish topic
-            hako_actuator->SetValue(HAL_REQUEST_VELOCITY_CONTROL, 0.5);
+            hako_motor_l->SetValue(HAL_REQUEST_VELOCITY_CONTROL, 0.5f);
+            hako_motor_r->SetValue(HAL_REQUEST_VELOCITY_CONTROL, 0.5f);
         }
         rclcpp::spin_some(openel_node);
         rate.sleep();
@@ -49,8 +82,10 @@ int main(int argc, char **argv)
 
     //OPENEL CODES
     {
-        hako_actuator->Finalize();
-        delete hako_actuator;
+        hako_motor_l->Finalize();
+        hako_motor_r->Finalize();
+        delete hako_motor_l;
+        delete hako_motor_r;
     }
 
     rclcpp::shutdown();
