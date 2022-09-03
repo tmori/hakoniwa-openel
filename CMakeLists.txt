@@ -20,7 +20,7 @@ endif()
 message(STATUS "BUILD_TYPE " ${BUILD_TYPE})
 message(STATUS "GCOV " ${GCOV})
 
-add_executable(
+add_library(
     hako-openel
     ${OPENEL_SOURCE_DIR}/Actuator.cpp
     ${OPENEL_SOURCE_DIR}/Sensor.cpp
@@ -31,7 +31,6 @@ add_executable(
     ${STUBS_SOURCE_DIR}/src/M5Stack.cpp
     ${MAIN_SOURCE_DIR}/hako_openEL_registryConfig.cpp
     ${MAIN_SOURCE_DIR}/openEL_ActuatorHako.cpp
-    ${MAIN_SOURCE_DIR}/main.cpp
 )
 
 target_include_directories(
