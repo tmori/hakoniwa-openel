@@ -99,12 +99,16 @@ ReturnCode SensorHako::fncGetTime(HALComponent *pHALComponent, unsigned int **ti
 
 ReturnCode SensorHako::fncGetValLst(HALComponent *pHALComponent, float **valueList, int **num)
 {
+    //std::cout<< "SensorHako::fncGetValLst():start" << std::endl;
     int i;
+    float *ptr = *valueList;
     for (i = 0; i < SENSOR_HAKO_DATA_NUM; i++) {
-        *valueList[i] = (float)ranges[i];
+        ptr[i] = (float)ranges[i];
     }
+    //std::cout<< "SensorHako::fncGetValLst():end1" << std::endl;
 
     **num = SENSOR_HAKO_DATA_NUM;
+    //std::cout<< "SensorHako::fncGetValLst():end2" << std::endl;
     return HAL_OK;
 }
 

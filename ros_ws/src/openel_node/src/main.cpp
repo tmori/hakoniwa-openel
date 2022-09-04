@@ -14,6 +14,7 @@ std::shared_ptr<rclcpp::Node> openel_node = nullptr;
 static Actuator* hako_motor_l;
 static Actuator* hako_motor_r;
 static Sensor* hako_sensor;
+static float scan_range[360];
 
 static void hako_motor_init()
 {
@@ -91,9 +92,15 @@ int main(int argc, char **argv)
     while (rclcpp::ok()) {
         //OPENEL CODE
         {
+            std::cout << "start openel" << std::endl;
+            int num;
             //publish topic
             hako_motor_l->SetValue(HAL_REQUEST_VELOCITY_CONTROL, 0.5f);
             hako_motor_r->SetValue(HAL_REQUEST_VELOCITY_CONTROL, 0.5f);
+
+            //get sub topics
+            hako_sensor->GetValueList(scan_range, &num);
+            std::cout << "end openel" << std::endl;
         }
         rclcpp::spin_some(openel_node);
         rate.sleep();
