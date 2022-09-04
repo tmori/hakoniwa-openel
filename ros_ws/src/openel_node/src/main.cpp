@@ -1,21 +1,18 @@
 #include <stdio.h>
 #include <iostream>
 #include <string.h>
-#include "openel_node.hpp"
 #include <Actuator.hpp>
 #include <Sensor.hpp>
 #include <openEL.hpp>
+#include "openel_node.hpp"
 #include "openel/openEL_ActuatorHako.hpp"
 
-using namespace std::chrono_literals;
-std::string * openel_pub_topic_name = nullptr;
-std::string* openel_sub_topic_name = nullptr;
-std::shared_ptr<rclcpp::Node> openel_node = nullptr;
 static Actuator* hako_motor_l;
 static Actuator* hako_motor_r;
 static Sensor* hako_sensor;
 static float scan_ranges[360];
-static geometry_msgs::msg::Twist cmd_vel;
+static float motor_velocity;
+static float motor_angle;
 
 static void hako_motor_init()
 {
@@ -62,68 +59,27 @@ static void do_control(void);
 
 int main(int argc, char **argv) 
 {
-    char buffer[3][4096];
+    openel_init(argc, argv[1]);
+    
+    std::cout << "START:" << openel_node_name << std::endl;
 
-    if (argc > 1) {
-        sprintf(buffer[0], "%s_tb3_node", argv[1]);
-        sprintf(buffer[1], "%s_cmd_vel", argv[1]);
-        sprintf(buffer[2], "%s_scan", argv[1]);
-        printf("START: %s\n", argv[1]);
-    }
-    else {
-        sprintf(buffer[0], "tb3_node");
-        sprintf(buffer[1], "cmd_vel");
-        sprintf(buffer[2], "scan");
-        printf("START\n");
-    }    
-    const char *node_name = buffer[0];
-    openel_pub_topic_name = new std::string(buffer[1]);
-    openel_sub_topic_name = new std::string(buffer[2]);
-    std::cout << "START:" << node_name << std::endl;
-    //ROS CODES
-    rclcpp::init(argc, argv);
-    openel_node = rclcpp::Node::make_shared(node_name);
-
-    //OPENEL CODES
-    {
-        hako_motor_init();
-        hako_sensor_init();
-    }
-
-    rclcpp::WallRate rate(100ms);
-    while (rclcpp::ok()) {
-        //OPENEL CODE
-        {
-            //get sub topics
-            int num;
-            hako_sensor->GetValueList(scan_ranges, &num);
-        }
-
+    hako_motor_init();
+    hako_sensor_init();
+    while (true) {
+        int num;
+        hako_sensor->GetValueList(scan_ranges, &num);
         do_control();
-
-        //OPENEL CODE
-        {
-            //publish topic
-            hako_motor_l->SetValue(HAL_REQUEST_VELOCITY_CONTROL, (float)cmd_vel.linear.x);
-            hako_motor_r->SetValue(HAL_REQUEST_VELOCITY_CONTROL, (float)cmd_vel.angular.z);
-        }
-
-        rclcpp::spin_some(openel_node);
-        rate.sleep();
+        hako_motor_l->SetValue(HAL_REQUEST_VELOCITY_CONTROL, motor_velocity);
+        hako_motor_r->SetValue(HAL_REQUEST_VELOCITY_CONTROL, motor_angle);
     }
+    hako_sensor->Finalize();
+    hako_motor_l->Finalize();
+    hako_motor_r->Finalize();
+    delete hako_motor_l;
+    delete hako_motor_r;
+    delete hako_sensor;
+
     std::cout << "EXIT" << std::endl;
-
-    //OPENEL CODES
-    {
-        hako_motor_l->Finalize();
-        hako_motor_r->Finalize();
-        hako_sensor->Finalize();
-        delete hako_motor_l;
-        delete hako_motor_r;
-        delete hako_sensor;
-    }
-
-    rclcpp::shutdown();
     return 0;
 }
 
@@ -159,12 +115,12 @@ static float get_right_distance(void) {
 
 static bool do_forward(void) {
   bool is_stop = false;
-  cmd_vel.linear.x = 0;
+  motor_velocity = 0;
   if (get_forward_distance() < 0.2f) {
-    cmd_vel.linear.x = 0;
+    motor_velocity = 0;
     is_stop = true;
   } else {
-    cmd_vel.linear.x = 0.5f;
+    motor_velocity = 0.5f;
   }
 
   return is_stop;
@@ -172,12 +128,12 @@ static bool do_forward(void) {
 
 static bool turn_right(void) {
   bool is_stop = false;
-  cmd_vel.angular.z = 0;
+  motor_angle = 0;
   if (get_right_distance() < 0.05f) {
-    cmd_vel.angular.z = -0.01;
+    motor_angle = -0.01;
     is_stop = true;
   } else {
-    cmd_vel.angular.z = 0;
+    motor_angle = 0;
   }
 
   return is_stop;
@@ -188,8 +144,8 @@ static void do_control(void)
   (void)do_forward();
   (void)turn_right();
 
-  if (cmd_vel.linear.x == 0 && cmd_vel.angular.z == 0) {
-    cmd_vel.angular.z = -1.0f;
+  if (motor_velocity == 0 && motor_angle == 0) {
+    motor_angle = -1.0f;
   }
   return;
 }

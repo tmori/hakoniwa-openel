@@ -37,6 +37,7 @@ class SensorHako : public Sensor
 private:
     static std::string strDevName;
     static std::vector<std::string> strFncLst;
+    static std::shared_ptr<rclcpp::Subscription<sensor_msgs::msg::LaserScan>> subscriber;
     static void scanCallback(const sensor_msgs::msg::LaserScan::SharedPtr msg);
     static double ranges[SENSOR_HAKO_DATA_NUM];
 

@@ -2,11 +2,16 @@
 #include "openEL_ActuatorHako.hpp"
 #include <iostream>
 #include <string.h>
+using namespace std::chrono_literals;
 
 std::shared_ptr<rclcpp::Publisher<geometry_msgs::msg::Twist>> ActuatorHako::publisher;
 geometry_msgs::msg::Twist ActuatorHako::cmd_vel;
 
 std::string ActuatorHako::strDevName = "ActuatorHako";
+std::string * openel_pub_topic_name = nullptr;
+static rclcpp::WallRate rate(100ms);
+std::shared_ptr<rclcpp::Node> openel_node = nullptr;
+const char *openel_node_name;
 
 std::vector<std::string> ActuatorHako::strFncLst =
 {
@@ -25,6 +30,9 @@ ReturnCode ActuatorHako::fncInit(HALComponent *pHALComponent)
 {
     if (publisher == nullptr) {
         std::cout<< "ActuatorHako::openel_pub_topic_name = " << *openel_pub_topic_name << std::endl;
+        rclcpp::init(0, nullptr);
+        openel_node = rclcpp::Node::make_shared(openel_node_name);
+
         publisher = openel_node->create_publisher<geometry_msgs::msg::Twist>(*openel_pub_topic_name, 1);
         cmd_vel.linear.x = 0.0f;
         cmd_vel.angular.z = 0.0f;
@@ -41,6 +49,9 @@ ReturnCode ActuatorHako::fncReInit(HALComponent *pHALComponent)
 ReturnCode ActuatorHako::fncFinalize(HALComponent *pHALComponent)
 {
     std::cout<< "ActuatorHako::fncFinalize()" << std::endl;
+    if (pHALComponent->hALId.instanceId == MOTOR_RIGHT) {
+        rclcpp::shutdown();
+    }
     return HAL_OK;
 }
 
@@ -110,6 +121,8 @@ ReturnCode ActuatorHako::fncSetValue(HALComponent *pHALComponent, int request, f
             cmd_vel.angular.z = value;
             //TODO publish timing .... 
             publisher->publish(cmd_vel);
+            rclcpp::spin_some(openel_node);
+            rate.sleep();
         }
         //std::cout<< "ActuatorHako::publish()" << std::endl;
         break;
