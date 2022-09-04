@@ -14,7 +14,8 @@ std::shared_ptr<rclcpp::Node> openel_node = nullptr;
 static Actuator* hako_motor_l;
 static Actuator* hako_motor_r;
 static Sensor* hako_sensor;
-static float scan_range[360];
+static float scan_ranges[360];
+static geometry_msgs::msg::Twist cmd_vel;
 
 static void hako_motor_init()
 {
@@ -57,6 +58,7 @@ static void hako_sensor_init()
     }
     std::cout << "OpenEL Sensor init OK" << std::endl;
 }
+static void do_control(void);
 
 int main(int argc, char **argv) 
 {
@@ -92,16 +94,20 @@ int main(int argc, char **argv)
     while (rclcpp::ok()) {
         //OPENEL CODE
         {
-            std::cout << "start openel" << std::endl;
-            int num;
-            //publish topic
-            hako_motor_l->SetValue(HAL_REQUEST_VELOCITY_CONTROL, 0.5f);
-            hako_motor_r->SetValue(HAL_REQUEST_VELOCITY_CONTROL, 0.5f);
-
             //get sub topics
-            hako_sensor->GetValueList(scan_range, &num);
-            std::cout << "end openel" << std::endl;
+            int num;
+            hako_sensor->GetValueList(scan_ranges, &num);
         }
+
+        do_control();
+
+        //OPENEL CODE
+        {
+            //publish topic
+            hako_motor_l->SetValue(HAL_REQUEST_VELOCITY_CONTROL, (float)cmd_vel.linear.x);
+            hako_motor_r->SetValue(HAL_REQUEST_VELOCITY_CONTROL, (float)cmd_vel.angular.z);
+        }
+
         rclcpp::spin_some(openel_node);
         rate.sleep();
     }
@@ -119,5 +125,72 @@ int main(int argc, char **argv)
 
     rclcpp::shutdown();
     return 0;
+}
+
+/* control */
+static float get_forward_distance(void) {
+  int i;
+  float min = 100.0f;
+  for (i = 0; i < 15; i++) {
+    if (scan_ranges[i] < min) {
+      min = scan_ranges[i];
+    }
+  }
+  for (i = (360 - 15); i < 360; i++) {
+    if (scan_ranges[i] < min) {
+      min = scan_ranges[i];
+    }
+  }
+  // printf("forward: %lf\n", min);
+  return min;
+}
+
+static float get_right_distance(void) {
+  int i;
+  float min = 100.0f;
+  for (i = (90 - 30); i < (90 + 30); i++) {
+    if (scan_ranges[i] < min) {
+      min = scan_ranges[i];
+    }
+  }
+  // printf("right: %lf\n", min);
+  return min;
+}
+
+static bool do_forward(void) {
+  bool is_stop = false;
+  cmd_vel.linear.x = 0;
+  if (get_forward_distance() < 0.2f) {
+    cmd_vel.linear.x = 0;
+    is_stop = true;
+  } else {
+    cmd_vel.linear.x = 0.5f;
+  }
+
+  return is_stop;
+}
+
+static bool turn_right(void) {
+  bool is_stop = false;
+  cmd_vel.angular.z = 0;
+  if (get_right_distance() < 0.05f) {
+    cmd_vel.angular.z = -0.01;
+    is_stop = true;
+  } else {
+    cmd_vel.angular.z = 0;
+  }
+
+  return is_stop;
+}
+
+static void do_control(void) 
+{
+  (void)do_forward();
+  (void)turn_right();
+
+  if (cmd_vel.linear.x == 0 && cmd_vel.angular.z == 0) {
+    cmd_vel.angular.z = -1.0f;
+  }
+  return;
 }
 
