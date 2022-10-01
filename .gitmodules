@@ -1,3 +1,6 @@
 [submodule "openel-arduino"]
 	path = openel-arduino
 	url = https://github.com/openel/openel-arduino.git
+[submodule "hakoniwa-ros2sim"]
+	path = hakoniwa-ros2sim
+	url = https://github.com/toppers/hakoniwa-ros2sim.git

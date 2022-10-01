@@ -27,5 +27,13 @@ WORKDIR /root/workspace
 # jinja2
 RUN pip install jinja2
 
+#install python
+RUN apt update &&  apt install -y python && \
+	curl https://bootstrap.pypa.io/pip/2.7/get-pip.py -o get-pip.py && \
+	python get-pip.py && \
+	pip install jinja2
+
+RUN apt install -y wget
+
 WORKDIR /root/workspace
 
