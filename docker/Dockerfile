@@ -44,5 +44,8 @@ RUN bash build.bash
 ENV PATH /root/workspace/hako/hakoniwa-core-cpp-client/cmake-build/core/sample/base-procs/hako-master/:${PATH}
 ENV PATH /root/workspace/hako/hakoniwa-core-cpp-client/cmake-build/core/sample/base-procs/hako-cmd/:${PATH}
 
+RUN mkdir /root/workspace/openel
+RUN ln -s /root/workspace/hako/hakoniwa-core-cpp-client /root/workspace/openel/hakoniwa-core-cpp-client
+
 WORKDIR /root/workspace
 
