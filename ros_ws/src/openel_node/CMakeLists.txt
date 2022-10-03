@@ -36,6 +36,7 @@ add_executable(openel_node
   src/openel/hako_openEL_registryConfig.cpp
   src/openel/openEL_ActuatorHako.cpp
   src/openel/openEL_SensorHako.cpp
+  src/openel/openel_impl.cpp
   src/main.cpp
 )
 ament_target_dependencies(openel_node 

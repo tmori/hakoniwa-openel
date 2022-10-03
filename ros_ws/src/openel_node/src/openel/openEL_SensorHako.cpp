@@ -28,7 +28,6 @@
 std::string SensorHako::strDevName = "HakoSensor";
 double SensorHako::ranges[SENSOR_HAKO_DATA_NUM];
 std::shared_ptr<rclcpp::Subscription<sensor_msgs::msg::LaserScan>> SensorHako::subscriber;
-std::string* openel_sub_topic_name = nullptr;
 
 std::vector<std::string> SensorHako::strFncLst =
 {

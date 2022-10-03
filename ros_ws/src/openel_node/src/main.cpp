@@ -70,6 +70,8 @@ int main(int argc, char **argv)
         do_control();
         hako_motor_l->SetValue(HAL_REQUEST_VELOCITY_CONTROL, motor_velocity);
         hako_motor_r->SetValue(HAL_REQUEST_VELOCITY_CONTROL, motor_angle);
+
+        openel_sync();
     }
     hako_sensor->Finalize();
     hako_motor_l->Finalize();
