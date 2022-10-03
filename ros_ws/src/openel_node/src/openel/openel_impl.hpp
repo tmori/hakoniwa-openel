@@ -1,5 +1,5 @@
-#ifndef _OPENEL_NODE_HPP_
-#define _OPENEL_NODE_HPP_
+#ifndef _OPENEL_IMPL_HPP_
+#define _OPENEL_IMPL_HPP_
 
 #include "rclcpp/rclcpp.hpp"
 extern std::shared_ptr<rclcpp::Node> openel_node;
@@ -28,4 +28,4 @@ static inline void openel_init(int argc, const char* argv)
     openel_sub_topic_name = new std::string(buffer[2]);
 }
 
-#endif /* _OPENEL_NODE_HPP_ */
+#endif /* _OPENEL_IMPL_HPP_ */

@@ -30,9 +30,6 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "openEL.hpp"
-#include "Actuator.hpp"
-#include "Sensor.hpp"
 #include "openEL_ActuatorHako.hpp"
 #include "openEL_SensorHako.hpp"
 

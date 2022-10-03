@@ -27,7 +27,7 @@
 #define OPENEL_SENSOR_HAKO_HPP
 
 #include "Sensor.hpp"
-#include "openel_node.hpp"
+#include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/laser_scan.hpp"
 
 #define SENSOR_HAKO_DATA_NUM 360

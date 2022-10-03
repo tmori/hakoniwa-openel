@@ -2,7 +2,7 @@
 #define _OPENEL_ACTUATOR_HAKO_HPP_
 
 #include "Actuator.hpp"
-#include "openel_node.hpp"
+#include "rclcpp/rclcpp.hpp"
 #include "geometry_msgs/msg/twist.hpp"
 
 #define MOTOR_ADDRESS    0x3A
@@ -14,11 +14,6 @@
 #define MOTOR_LENGTH_SPEED   (2)
 #define MOTOR_LENGTH_ENCODER (4)
 
-enum Instance {
-    MOTOR_LEFT = 1,
-    MOTOR_RIGHT,
-    InstanceNum
-};
 
 class ActuatorHako : public Actuator
 {

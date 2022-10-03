@@ -1,4 +1,6 @@
 
+#include "../openel_common.hpp"
+#include "openel_impl.hpp"
 #include "openEL_ActuatorHako.hpp"
 #include <iostream>
 #include <string.h>

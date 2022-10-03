@@ -22,7 +22,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+#include "openel_impl.hpp"
 #include "openEL_SensorHako.hpp"
 
 std::string SensorHako::strDevName = "HakoSensor";
