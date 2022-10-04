@@ -73,3 +73,14 @@ https://github.com/toppers/hakoniwa-ros2sim/blob/main/README_jp.md#%E3%82%B7%E3%
 bash run.bash openel_node TB3RoboModel
 ```
 
+# デモンストレーション
+
+上記の一連の操作（インストール以外）の操作デモ内容です．
+
+
+https://user-images.githubusercontent.com/164193/193765479-5c8db856-9829-4ba8-bf8c-7b9381b8c88f.mp4
+
+
+
+
+
