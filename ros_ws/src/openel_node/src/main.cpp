@@ -60,8 +60,6 @@ int main(int argc, char **argv)
 {
     openel_init(argc, argv[1]);
     
-    std::cout << "START:" << openel_node_name << std::endl;
-
     hako_motor_init();
     hako_sensor_init();
     while (true) {

@@ -1,4 +1,5 @@
 #include "openel_impl.hpp"
+#include "openel_impl_private.hpp"
 
 std::string * openel_pub_topic_name = nullptr;
 std::string* openel_sub_topic_name = nullptr;
@@ -26,6 +27,7 @@ void openel_init(int argc, const char* argv)
     openel_node_name = buffer[0];
     openel_pub_topic_name = new std::string(buffer[1]);
     openel_sub_topic_name = new std::string(buffer[2]);
+    std::cout << "START:" << openel_node_name << std::endl;
 
     rclcpp::init(0, nullptr);
     openel_node = rclcpp::Node::make_shared(openel_node_name);
