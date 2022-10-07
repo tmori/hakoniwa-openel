@@ -10,6 +10,7 @@ project(hakoniwa-openel
 set(OPENEL_SOURCE_DIR "${PROJECT_SOURCE_DIR}/../openel-arduino/src")
 set(STUBS_SOURCE_DIR "${PROJECT_SOURCE_DIR}/../stubs")
 set(COMMON_SOURCE_DIR "${PROJECT_SOURCE_DIR}/../src")
+set(HAKO_SOURCE_DIR "${PROJECT_SOURCE_DIR}/../../hako/hakoniwa-core-cpp-client")
 set(MAIN_SOURCE_DIR "${PROJECT_SOURCE_DIR}/src")
 
 if (DEFINED HAKO_OPTION_FILEPATH)
@@ -36,6 +37,16 @@ add_executable(
     ${MAIN_SOURCE_DIR}/openEL_SensorHako.cpp
     ${MAIN_SOURCE_DIR}/openel_impl.cpp
 )
+message(STATUS "hako lib path: " ${HAKO_SOURCE_DIR}/cmake-build/core/src)
+target_link_directories(hako-openel
+  PRIVATE
+  ${HAKO_SOURCE_DIR}/cmake-build/core/src
+)
+
+target_link_libraries(hako-openel 
+  hako
+  pthread
+)
 
 target_include_directories(
     hako-openel
@@ -43,4 +54,5 @@ target_include_directories(
     PRIVATE ${OPENEL_SOURCE_DIR}
     PRIVATE ${STUBS_SOURCE_DIR}/include
     PRIVATE ${COMMON_SOURCE_DIR}
+    PRIVATE ${HAKO_SOURCE_DIR}/core/src/include
 )
