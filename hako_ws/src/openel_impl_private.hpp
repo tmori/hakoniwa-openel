@@ -1,0 +1,5 @@
+#ifndef _OPENEL_IMPL_PRIVATE_HPP_
+#define _OPENEL_IMPL_PRIVATE_HPP_
+
+
+#endif /* _OPENEL_IMPL_PRIVATE_HPP_ */
