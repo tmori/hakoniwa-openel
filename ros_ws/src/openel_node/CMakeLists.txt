@@ -17,6 +17,7 @@ endif()
 
 set(OPENEL_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../openel-arduino/src")
 set(STUBS_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../stubs")
+set(OPENEL_TB3_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../../../src")
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
@@ -33,11 +34,11 @@ add_executable(openel_node
   ${OPENEL_SOURCE_DIR}/openEL_linkedList.cpp
   ${OPENEL_SOURCE_DIR}/openEL.cpp
   ${STUBS_SOURCE_DIR}/src/M5Stack.cpp
-  src/openel/hako_openEL_registryConfig.cpp
-  src/openel/openEL_ActuatorHako.cpp
-  src/openel/openEL_SensorHako.cpp
-  src/openel/openel_impl.cpp
-  src/main.cpp
+  src/hako_openEL_registryConfig.cpp
+  src/openEL_ActuatorHako.cpp
+  src/openEL_SensorHako.cpp
+  src/openel_impl.cpp
+  ${OPENEL_TB3_SOURCE_DIR}/main.cpp
 )
 ament_target_dependencies(openel_node 
   rclcpp 
@@ -59,6 +60,7 @@ target_include_directories(openel_node
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../../openel-arduino/src>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../../stubs/include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../../src>
 )
 
 install(TARGETS

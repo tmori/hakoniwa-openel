@@ -4,7 +4,7 @@
 #include <Actuator.hpp>
 #include <Sensor.hpp>
 #include "openel_common.hpp"
-#include "openel/openel_impl.hpp"
+#include "openel_impl.hpp"
 
 static Actuator* hako_motor_l;
 static Actuator* hako_motor_r;
