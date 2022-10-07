@@ -1,5 +1,5 @@
 
-#include "../openel_common.hpp"
+#include "openEl_common.hpp"
 #include "openel_impl_private.hpp"
 #include "openEL_ActuatorHako.hpp"
 #include <iostream>
