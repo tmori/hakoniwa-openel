@@ -31,8 +31,10 @@ add_executable(
     ${OPENEL_SOURCE_DIR}/openEL.cpp
     ${STUBS_SOURCE_DIR}/src/M5Stack.cpp
     ${COMMON_SOURCE_DIR}/main.cpp
-#    ${MAIN_SOURCE_DIR}/hako_openEL_registryConfig.cpp
-#    ${MAIN_SOURCE_DIR}/openEL_ActuatorHako.cpp
+    ${MAIN_SOURCE_DIR}/hako_openEL_registryConfig.cpp
+    ${MAIN_SOURCE_DIR}/openEL_ActuatorHako.cpp
+    ${MAIN_SOURCE_DIR}/openEL_SensorHako.cpp
+    ${MAIN_SOURCE_DIR}/openel_impl.cpp
 )
 
 target_include_directories(

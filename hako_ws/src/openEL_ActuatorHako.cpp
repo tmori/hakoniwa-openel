@@ -1,12 +1,9 @@
 
-#include "../openel_common.hpp"
+#include "openel_common.hpp"
 #include "openel_impl_private.hpp"
 #include "openEL_ActuatorHako.hpp"
 #include <iostream>
 #include <string.h>
-
-std::shared_ptr<rclcpp::Publisher<geometry_msgs::msg::Twist>> ActuatorHako::publisher;
-geometry_msgs::msg::Twist ActuatorHako::cmd_vel;
 
 std::string ActuatorHako::strDevName = "ActuatorHako";
 
@@ -25,14 +22,6 @@ Property ActuatorHako::ActuatorHako_property;
 
 ReturnCode ActuatorHako::fncInit(HALComponent *pHALComponent)
 {
-    if (publisher == nullptr) {
-        std::cout<< "ActuatorHako::openel_pub_topic_name = " << *openel_pub_topic_name << std::endl;
-
-        publisher = openel_node->create_publisher<geometry_msgs::msg::Twist>(*openel_pub_topic_name, 1);
-        cmd_vel.linear.x = 0.0f;
-        cmd_vel.angular.z = 0.0f;
-        std::cout<< "ActuatorHako::fncInit()" << std::endl;
-    }
     return HAL_OK;
 }
 
@@ -45,7 +34,6 @@ ReturnCode ActuatorHako::fncFinalize(HALComponent *pHALComponent)
 {
     std::cout<< "ActuatorHako::fncFinalize()" << std::endl;
     if (pHALComponent->hALId.instanceId == MOTOR_RIGHT) {
-        rclcpp::shutdown();
     }
     return HAL_OK;
 }
@@ -110,12 +98,8 @@ ReturnCode ActuatorHako::fncSetValue(HALComponent *pHALComponent, int request, f
         break;
     case HAL_REQUEST_VELOCITY_CONTROL:
         if (pHALComponent->hALId.instanceId == MOTOR_LEFT) {
-            cmd_vel.linear.x = value;
         }
         else {
-            cmd_vel.angular.z = value;
-            //TODO publish timing .... 
-            publisher->publish(cmd_vel);
         }
         //std::cout<< "ActuatorHako::publish()" << std::endl;
         break;

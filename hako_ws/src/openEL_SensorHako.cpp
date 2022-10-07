@@ -24,6 +24,7 @@
  */
 #include "openel_impl_private.hpp"
 #include "openEL_SensorHako.hpp"
+#include <iostream>
 
 std::string SensorHako::strDevName = "HakoSensor";
 double SensorHako::ranges[SENSOR_HAKO_DATA_NUM];
@@ -43,20 +44,9 @@ std::vector<std::string> SensorHako::strFncLst =
 
 
 Property SensorHako::SensorHako_property;
-void SensorHako::scanCallback(const sensor_msgs::msg::LaserScan::SharedPtr msg)
-{
-    int i;
-    for (i = 0; i < SENSOR_HAKO_DATA_NUM; i++) {
-        ranges[i] = msg->ranges[i];
-    }
-    //std::cout<< "SensorHako::scanCallback()" << std::endl;
-}
 
 ReturnCode SensorHako::fncInit(HALComponent *pHALComponent)
 {
-    std::cout<< "SensorHako::openel_sub_topic_name = " << *openel_sub_topic_name << std::endl;
-    subscriber = openel_node->create_subscription<sensor_msgs::msg::LaserScan>(
-      *openel_sub_topic_name, 1, SensorHako::scanCallback);
     std::cout<< "SensorHako::fncInit()" << std::endl;
     return HAL_OK;
 }
