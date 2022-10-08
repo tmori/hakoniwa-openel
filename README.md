@@ -4,18 +4,32 @@
 
 箱庭上で TurtleBot3 を制御する Open-EL サンプルプロジェクトです．
 
+## 設計
+
+OpenELの設計としては，２種類の設計案があり，両方対応しています．
+
+## ROS2実装
+
+![image](https://user-images.githubusercontent.com/164193/194730237-aba61334-724c-411a-9f31-456c177d00ed.png)
+
+## C++版箱庭実装
+
+![image](https://user-images.githubusercontent.com/164193/194730245-96aec542-68f1-4d02-803b-138aa88645a2.png)
+
+
 ## ソースコード
 
 箱庭上で動作する Open-EL サンプルアプリはこちらの main 関数です．
 
 https://github.com/tmori/hakoniwa-openel/blob/main/src/main.cpp
 
-また，箱庭上で動作可能な Open-ELデバイスソースは，２種類あります．
+また，箱庭上で動作可能な Open-ELデバイスソースは，設計毎に以下に配置しています．
 
 * ROS2 実装
   * https://github.com/tmori/hakoniwa-openel/tree/main/ros_ws/src/openel_node/src/openel
 * C++版箱庭実装
   * https://github.com/tmori/hakoniwa-openel/tree/main/hako_ws/src
+
 
 ## インストール手順
 
