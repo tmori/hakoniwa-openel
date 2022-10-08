@@ -35,7 +35,6 @@ class SensorHako : public Sensor
 private:
     static std::string strDevName;
     static std::vector<std::string> strFncLst;
-    static double ranges[SENSOR_HAKO_DATA_NUM];
 
 public:
     static Property SensorHako_property;

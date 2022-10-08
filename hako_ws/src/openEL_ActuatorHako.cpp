@@ -4,6 +4,7 @@
 #include "openEL_ActuatorHako.hpp"
 #include <iostream>
 #include <string.h>
+#include "geometry_msgs/pdu_ctype_Twist.h"
 
 std::string ActuatorHako::strDevName = "ActuatorHako";
 
@@ -22,6 +23,7 @@ Property ActuatorHako::ActuatorHako_property;
 
 ReturnCode ActuatorHako::fncInit(HALComponent *pHALComponent)
 {
+    std::cout<< "ActuatorHako::fncInit()" << std::endl;
     return HAL_OK;
 }
 
@@ -83,6 +85,8 @@ ReturnCode ActuatorHako::fncGetTimedValLst(HALComponent *pHALComponent, float **
 
 ReturnCode ActuatorHako::fncSetValue(HALComponent *pHALComponent, int request, float value)
 {
+    Hako_Twist pdu_msg;
+    bool ret = false;
     ReturnCode retCode = HAL_OK;
 
     if (pHALComponent->hALId.instanceId >= InstanceNum)
@@ -97,10 +101,15 @@ ReturnCode ActuatorHako::fncSetValue(HALComponent *pHALComponent, int request, f
         //setEncoder((int32_t)value, pHALComponent->hALId.instanceId);
         break;
     case HAL_REQUEST_VELOCITY_CONTROL:
+        memset((char*)&pdu_msg, 0, sizeof(Hako_Twist));
+        (void)hako_pdu_read_data(HAKO_PDU_CHANNEL_CMDVEL, (char*)&pdu_msg, sizeof(Hako_Twist));
         if (pHALComponent->hALId.instanceId == MOTOR_LEFT) {
+            pdu_msg.linear.x = value;
         }
         else {
+            pdu_msg.angular.z = value;
         }
+        hako_pdu_write_data(HAKO_PDU_CHANNEL_CMDVEL,  (char*)&pdu_msg, sizeof(Hako_Twist));
         //std::cout<< "ActuatorHako::publish()" << std::endl;
         break;
     case HAL_REQUEST_TORQUE_CONTROL:

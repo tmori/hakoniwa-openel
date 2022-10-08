@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
+#include "geometry_msgs/pdu_ctype_Twist.h"
 
 #define HAKO_CONFIG_DELTA_TIME_USEC  100000
 #define HAKO_CONFIG_ASSET_NAME  "openel_node"
@@ -44,6 +45,11 @@ void openel_init(int argc, const char* argv)
     bool ret = hako_asset->asset_register(*hako_asset_name, callback);
     if (ret == false) {
         std::cout << "ERROR: Can not register asset" << std::endl;
+        return;
+    }
+    ret = hako_pdu_write_init(HAKO_PDU_CHANNEL_CMDVEL, sizeof(Hako_Twist));
+    if (ret == false) {
+        std::cout << "ERROR: hako_pdu_write_init() return error" << std::endl;
         return;
     }
     return;

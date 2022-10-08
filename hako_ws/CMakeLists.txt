@@ -11,6 +11,7 @@ set(OPENEL_SOURCE_DIR "${PROJECT_SOURCE_DIR}/../openel-arduino/src")
 set(STUBS_SOURCE_DIR "${PROJECT_SOURCE_DIR}/../stubs")
 set(COMMON_SOURCE_DIR "${PROJECT_SOURCE_DIR}/../src")
 set(HAKO_SOURCE_DIR "${PROJECT_SOURCE_DIR}/../../hako/hakoniwa-core-cpp-client")
+set(HAKO_PDU_SOURCE_DIR "${PROJECT_SOURCE_DIR}/../hakoniwa-ros2pdu/pdu/types")
 set(MAIN_SOURCE_DIR "${PROJECT_SOURCE_DIR}/src")
 
 if (DEFINED HAKO_OPTION_FILEPATH)
@@ -21,6 +22,7 @@ endif()
 
 message(STATUS "BUILD_TYPE " ${BUILD_TYPE})
 message(STATUS "GCOV " ${GCOV})
+message(STATUS "pdu dir: " ${HAKO_PDU_SOURCE_DIR})
 
 add_executable(
     hako-openel
@@ -55,4 +57,5 @@ target_include_directories(
     PRIVATE ${STUBS_SOURCE_DIR}/include
     PRIVATE ${COMMON_SOURCE_DIR}
     PRIVATE ${HAKO_SOURCE_DIR}/core/src/include
+    PRIVATE ${HAKO_PDU_SOURCE_DIR}
 )
