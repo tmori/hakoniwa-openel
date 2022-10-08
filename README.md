@@ -8,11 +8,14 @@
 
 箱庭上で動作する Open-EL サンプルアプリはこちらの main 関数です．
 
-https://github.com/tmori/hakoniwa-openel/blob/main/ros_ws/src/openel_node/src/main.cpp
+https://github.com/tmori/hakoniwa-openel/blob/main/src/main.cpp
 
-また，箱庭上で動作可能な Open-ELデバイスソース一式はこちらです(ROS2ベース)．
+また，箱庭上で動作可能な Open-ELデバイスソースは，２種類あります．
 
-https://github.com/tmori/hakoniwa-openel/tree/main/ros_ws/src/openel_node/src/openel
+* ROS2 実装
+  * https://github.com/tmori/hakoniwa-openel/tree/main/ros_ws/src/openel_node/src/openel
+* C++版箱庭実装
+  * https://github.com/tmori/hakoniwa-openel/tree/main/hako_ws/src
 
 ## インストール手順
 
