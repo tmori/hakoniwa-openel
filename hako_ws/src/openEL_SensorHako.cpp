@@ -24,9 +24,10 @@
  */
 #include "openel_impl_private.hpp"
 #include "openEL_SensorHako.hpp"
+#include <iostream>
+#include "sensor_msgs/pdu_ctype_LaserScan.h"
 
 std::string SensorHako::strDevName = "HakoSensor";
-double SensorHako::ranges[SENSOR_HAKO_DATA_NUM];
 
 std::vector<std::string> SensorHako::strFncLst =
 {
@@ -43,20 +44,9 @@ std::vector<std::string> SensorHako::strFncLst =
 
 
 Property SensorHako::SensorHako_property;
-void SensorHako::scanCallback(const sensor_msgs::msg::LaserScan::SharedPtr msg)
-{
-    int i;
-    for (i = 0; i < SENSOR_HAKO_DATA_NUM; i++) {
-        ranges[i] = msg->ranges[i];
-    }
-    //std::cout<< "SensorHako::scanCallback()" << std::endl;
-}
 
 ReturnCode SensorHako::fncInit(HALComponent *pHALComponent)
 {
-    std::cout<< "SensorHako::openel_sub_topic_name = " << *openel_sub_topic_name << std::endl;
-    subscriber = openel_node->create_subscription<sensor_msgs::msg::LaserScan>(
-      *openel_sub_topic_name, 1, SensorHako::scanCallback);
     std::cout<< "SensorHako::fncInit()" << std::endl;
     return HAL_OK;
 }
@@ -100,10 +90,14 @@ ReturnCode SensorHako::fncGetTime(HALComponent *pHALComponent, unsigned int **ti
 ReturnCode SensorHako::fncGetValLst(HALComponent *pHALComponent, float **valueList, int **num)
 {
     //std::cout<< "SensorHako::fncGetValLst():start" << std::endl;
+    //GET PDU DATA
+    static Hako_LaserScan pdu_msg;
+    (void)hako_pdu_read_data(HAKO_PDU_CHANNEL_SCAN, (char*)&pdu_msg, sizeof(Hako_LaserScan));
+
     int i;
     float *ptr = *valueList;
     for (i = 0; i < SENSOR_HAKO_DATA_NUM; i++) {
-        ptr[i] = (float)ranges[i];
+        ptr[i] = (float)pdu_msg.ranges[i];
     }
     //std::cout<< "SensorHako::fncGetValLst():end1" << std::endl;
 
