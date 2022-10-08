@@ -52,6 +52,7 @@ void openel_init(int argc, const char* argv)
         std::cout << "ERROR: hako_pdu_write_init() return error" << std::endl;
         return;
     }
+    std::cout << "hako_pdu_write_init("<< HAKO_PDU_CHANNEL_CMDVEL << ", "<< sizeof(Hako_Twist) << ") ret=" << ret << std::endl;
     return;
 }
 

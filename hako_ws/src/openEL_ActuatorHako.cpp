@@ -109,8 +109,10 @@ ReturnCode ActuatorHako::fncSetValue(HALComponent *pHALComponent, int request, f
         else {
             pdu_msg.angular.z = value;
         }
-        hako_pdu_write_data(HAKO_PDU_CHANNEL_CMDVEL,  (char*)&pdu_msg, sizeof(Hako_Twist));
-        //std::cout<< "ActuatorHako::publish()" << std::endl;
+        ret = hako_pdu_write_data(HAKO_PDU_CHANNEL_CMDVEL,  (char*)&pdu_msg, sizeof(Hako_Twist));
+        //if (ret) {
+        //    std::cout<< "ActuatorHako::publish() : ret = " << ret << std::endl;
+        //}
         break;
     case HAL_REQUEST_TORQUE_CONTROL:
         break;
