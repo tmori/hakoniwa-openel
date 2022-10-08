@@ -50,6 +50,7 @@ docker run -v ${HAKONIWA_TOP_DIR}:/root/workspace/openel \
 	--net host \
 	-e CORE_IPADDR=${IPADDR} \
 	-e OS_TYPE=${OS_TYPE} \
+	-e ENV_HAKO_SOURCE_DIR=/root/workspace/hako/hakoniwa-core-cpp-client \
 	--name hakoniwa-openel ${DOCKER_IMAGE} 
 else
 docker run -v ${HAKONIWA_TOP_DIR}:/root/workspace/openel \
@@ -58,5 +59,6 @@ docker run -v ${HAKONIWA_TOP_DIR}:/root/workspace/openel \
 	-e CORE_IPADDR=${IPADDR} \
 	-e ROS_UNITY_IPADDR=${IPADDR} \
 	-e OS_TYPE=${OS_TYPE} \
+	-e ENV_HAKO_SOURCE_DIR=/root/workspace/hako/hakoniwa-core-cpp-client \
 	--name hakoniwa-ros-sim ${DOCKER_IMAGE} 
 fi
